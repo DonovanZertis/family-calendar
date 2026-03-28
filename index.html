@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Family Calendar</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f5f2ed; --surface:#fff; --ink:#1c1a17; --ink-mid:#5a5650; --ink-light:#9a9590; --border:#e5e0d8;
+  --michael:#1d4e7a; --michael-bg:#e8f0f8; --partner:#7a3d6e; --partner-bg:#f5e8f2;
+  --gp:#2e6b4a; --gp-bg:#e4f2eb; --school:#c05a1a; --school-bg:#fdf0e6; --work:#1d3a5a; --work-bg:#e6ecf4;
+  --radius:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;font-size:14px}
+.header{background:var(--ink);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.header h1{font-family:'Lora',serif;font-size:1.25rem;color:#fff;font-weight:600}
+.header p{font-size:.72rem;color:rgba(255,255,255,.4);margin-top:2px;font-weight:300}
+.sync-row{display:flex;gap:8px;flex-wrap:wrap}
+.sync-chip{font-size:.7rem;color:rgba(255,255,255,.55);display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);padding:4px 9px;border-radius:20px}
+.sync-dot{width:6px;height:6px;background:#4caf7d;border-radius:50%;animation:pulse 2.5s infinite}
+.sync-dot.amber{background:#f0a030}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.legend{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 24px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:.72rem;color:var(--ink-mid)}
+.pill{height:8px;width:20px;border-radius:4px}
+.controls{padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.month-nav{display:flex;align-items:center;gap:10px}
+.nav-btn{background:var(--surface);border:1px solid var(--border);border-radius:8px;width:34px;height:34px;cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:all .15s;color:var(--ink)}
+.nav-btn:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.month-label{font-family:'Lora',serif;font-size:1.1rem;font-weight:600;min-width:165px;text-align:center}
+.today-btn{background:transparent;border:1px solid var(--border);border-radius:7px;padding:6px 13px;font-family:'Outfit',sans-serif;font-size:.75rem;cursor:pointer;color:var(--ink-mid);transition:all .15s}
+.today-btn:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.add-btn{background:var(--ink);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-family:'Outfit',sans-serif;font-size:.8rem;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;transition:opacity .15s}
+.add-btn:hover{opacity:.82}
+.calendar-wrap{padding:0 24px 32px}
+.day-headers{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px}
+.day-header{text-align:center;font-size:.68rem;font-weight:600;color:var(--ink-light);padding:5px 0;text-transform:uppercase;letter-spacing:.08em}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cell{background:var(--surface);border-radius:var(--radius);min-height:95px;padding:7px;border:1.5px solid var(--border);cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .1s;position:relative;overflow:hidden}
+.cell:hover{border-color:#999;box-shadow:0 3px 14px rgba(0,0,0,.09);transform:translateY(-1px)}
+.cell.other-month{background:#faf9f6;opacity:.45;pointer-events:none}
+.cell.today{border-color:var(--michael);border-width:2px}
+.cell.school-hol{background:linear-gradient(160deg,#fffaf5 0%,#fff4eb 100%)}
+.school-banner{position:absolute;top:0;left:0;right:0;height:3px;background:var(--school);opacity:.7}
+.day-num{font-size:.78rem;font-weight:500;color:var(--ink-light);line-height:1;margin-bottom:5px}
+.cell.today .day-num{background:var(--michael);color:#fff;width:21px;height:21px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:600}
+.events{display:flex;flex-direction:column;gap:2px}
+.event{border-radius:4px;padding:2px 6px;font-size:.65rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.5;cursor:pointer}
+.event.michael{background:var(--michael-bg);color:var(--michael)}
+.event.partner{background:var(--partner-bg);color:var(--partner)}
+.event.grandparent{background:var(--gp-bg);color:var(--gp)}
+.event.school{background:var(--school-bg);color:var(--school)}
+.event.work{background:var(--work-bg);color:var(--work);font-style:italic}
+.more-label{font-size:.6rem;color:var(--ink-light);padding:1px 4px}
+.overlay{position:fixed;inset:0;background:rgba(28,26,23,.55);backdrop-filter:blur(3px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border-radius:16px;width:100%;max-width:430px;box-shadow:0 20px 60px rgba(0,0,0,.2);overflow:hidden;transform:translateY(16px);transition:transform .2s}
+.overlay.open .modal{transform:translateY(0)}
+.modal-header{background:var(--ink);color:#fff;padding:18px 22px;display:flex;justify-content:space-between;align-items:center}
+.modal-header h2{font-family:'Lora',serif;font-size:1rem;font-weight:600}
+.close-btn{background:rgba(255,255,255,.12);border:none;color:#fff;width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center}
+.modal-body{padding:22px;display:flex;flex-direction:column;gap:14px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:.75rem;font-weight:600;color:var(--ink-mid);text-transform:uppercase;letter-spacing:.05em}
+.field input,.field select,.field textarea{font-family:'Outfit',sans-serif;font-size:.85rem;border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--ink);outline:none;transition:border-color .15s;background:#fff}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--michael)}
+.field textarea{resize:vertical;min-height:60px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modal-footer{padding:14px 22px 20px;display:flex;gap:8px;justify-content:flex-end}
+.btn-cancel{background:transparent;border:1.5px solid var(--border);border-radius:8px;padding:9px 18px;font-family:'Outfit',sans-serif;font-size:.82rem;cursor:pointer;color:var(--ink-mid);transition:all .15s}
+.btn-cancel:hover{background:var(--bg)}
+.btn-save{background:var(--ink);color:#fff;border:none;border-radius:8px;padding:9px 22px;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:500;cursor:pointer;transition:opacity .15s}
+.btn-save:hover{opacity:.82}
+.day-events-list{display:flex;flex-direction:column;gap:8px;max-height:340px;overflow-y:auto}
+.day-event-item{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:8px}
+.evt-bar{width:4px;border-radius:2px;align-self:stretch;flex-shrink:0}
+.evt-body{flex:1}
+.evt-title{font-size:.85rem;font-weight:500}
+.evt-meta{font-size:.72rem;color:var(--ink-light);margin-top:2px}
+.evt-delete{background:none;border:none;color:var(--ink-light);cursor:pointer;font-size:.85rem;padding:2px 4px;border-radius:4px;transition:color .1s,background .1s}
+.evt-delete:hover{color:#c0392b;background:#fdecea}
+.no-events{color:var(--ink-light);font-size:.82rem;text-align:center;padding:20px 0;font-style:italic}
+.setup-banner{margin:0 24px 16px;background:#fff8ec;border:1.5px solid #f0d080;border-radius:10px;padding:12px 16px;font-size:.78rem;color:#7a5a10;display:flex;gap:10px;align-items:flex-start;line-height:1.6}
+.setup-banner.hidden{display:none}
+.setup-banner strong{display:block;margin-bottom:2px;font-size:.8rem}
+.banner-close{margin-left:auto;background:none;border:none;cursor:pointer;color:#b08030;font-size:1rem;flex-shrink:0}
+code{background:rgba(0,0,0,.07);padding:1px 5px;border-radius:4px;font-size:.74rem;font-family:monospace}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--ink);color:#fff;padding:10px 20px;border-radius:8px;font-size:.82rem;z-index:200;transition:transform .25s;pointer-events:none;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+@media(max-width:600px){
+  .header,.controls,.calendar-wrap,.legend{padding-left:12px;padding-right:12px}
+  .cell{min-height:70px;padding:5px}
+  .event{font-size:.58rem;padding:1px 4px}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>Family Calendar</h1>
+    <p>Michael · Partner · Grandparents &nbsp;·&nbsp; South Ayrshire Schools</p>
+  </div>
+  <div class="sync-row">
+    <div class="sync-chip"><span class="sync-dot amber" id="outlookDot"></span><span id="outlookLabel">Outlook: not set up</span></div>
+    <div class="sync-chip"><span class="sync-dot amber" id="sheetsDot"></span><span id="sheetsLabel">Sheets: not set up</span></div>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><span class="pill" style="background:var(--work-bg);border:1.5px solid var(--work)"></span>Michael's Work</div>
+  <div class="legend-item"><span class="pill" style="background:var(--michael-bg);border:1.5px solid var(--michael)"></span>Michael</div>
+  <div class="legend-item"><span class="pill" style="background:var(--partner-bg);border:1.5px solid var(--partner)"></span>Partner</div>
+  <div class="legend-item"><span class="pill" style="background:var(--gp-bg);border:1.5px solid var(--gp)"></span>Grandparents</div>
+  <div class="legend-item"><span class="pill" style="background:var(--school-bg);border:1.5px solid var(--school)"></span>School Holiday</div>
+</div>
+
+<div class="setup-banner" id="setupBanner">
+  <span>⚙️</span>
+  <div>
+    <strong>Two quick setup steps needed</strong>
+    1. Paste your Outlook iCal URL into <code>OUTLOOK_ICAL_URL</code> in the script.<br>
+    2. Create the Google Sheet, paste its CSV URL into <code>SHEETS_CSV_URL</code> and your Apps Script URL into <code>SHEETS_POST_URL</code>.<br>
+    Full step-by-step instructions are in the README.
+  </div>
+  <button class="banner-close" onclick="document.getElementById('setupBanner').classList.add('hidden')">✕</button>
+</div>
+
+<div class="controls">
+  <div class="month-nav">
+    <button class="nav-btn" id="prevBtn">&#8592;</button>
+    <div class="month-label" id="monthLabel"></div>
+    <button class="nav-btn" id="nextBtn">&#8594;</button>
+    <button class="today-btn" id="todayBtn">Today</button>
+  </div>
+  <button class="add-btn" id="addBtn">＋ Add Event</button>
+</div>
+
+<div class="calendar-wrap">
+  <div class="day-headers">
+    <div class="day-header">Mon</div><div class="day-header">Tue</div><div class="day-header">Wed</div>
+    <div class="day-header">Thu</div><div class="day-header">Fri</div><div class="day-header">Sat</div><div class="day-header">Sun</div>
+  </div>
+  <div class="grid" id="calGrid"></div>
+</div>
+
+<!-- ADD EVENT MODAL -->
+<div class="overlay" id="addOverlay">
+  <div class="modal">
+    <div class="modal-header"><h2>Add Childcare Event</h2><button class="close-btn" id="addClose">✕</button></div>
+    <div class="modal-body">
+      <div class="field"><label>Title</label><input type="text" id="evtTitle" placeholder="e.g. Nursery pickup, Grandparents visiting…"></div>
+      <div class="field-row">
+        <div class="field"><label>Date</label><input type="date" id="evtDate"></div>
+        <div class="field"><label>Time (optional)</label><input type="time" id="evtTime"></div>
+      </div>
+      <div class="field"><label>Who's responsible</label>
+        <select id="evtWho"><option value="michael">Michael</option><option value="partner">Partner</option><option value="grandparent">Grandparents</option></select>
+      </div>
+      <div class="field"><label>Notes (optional)</label><textarea id="evtNotes" placeholder="Any extra details…"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" id="addCancelBtn">Cancel</button>
+      <button class="btn-save" id="saveEvtBtn">Save Event</button>
+    </div>
+  </div>
+</div>
+
+<!-- DAY DETAIL MODAL -->
+<div class="overlay" id="dayOverlay">
+  <div class="modal">
+    <div class="modal-header"><h2 id="dayModalTitle">Events</h2><button class="close-btn" id="dayClose">✕</button></div>
+    <div class="modal-body"><div class="day-events-list" id="dayEventsList"></div></div>
+    <div class="modal-footer">
+      <button class="btn-cancel" id="dayCancelBtn">Close</button>
+      <button class="btn-save" id="dayAddBtn">＋ Add to this day</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════════════
+//  CONFIGURATION — fill in these three values to go live
+// ════════════════════════════════════════════════════
+const OUTLOOK_ICAL_URL = 'https://outlook.office365.com/owa/calendar/312bb03e527e48a9a3fdcfed82046653@pristinecondition.com/a3808f16ca9449bd8639142c640a28c812203616382696668906/calendar.ics';   // Outlook ICS private link
+const SHEETS_CSV_URL   = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS0NTOdjxM36EJW9y3wqX4nOpgW-iQopzUyQ2-z5BoAtXX2go6dBC-XHsvNxFp2QW3BD_vVbuUWJ8Me/pub?gid=0&single=true&output=csv';   // Google Sheet → File → Share → Publish as CSV
+const SHEETS_POST_URL  = 'https://script.google.com/macros/s/AKfycbwUBQZ2GXFJQ4H9i_NsNHjnYCacPl5-hLPWJ5hO3bQtFTtqN6GCE2iGL6cXw9a1hA8o/exec';   // Google Apps Script Web App URL
+// ════════════════════════════════════════════════════
+
+// SOUTH AYRSHIRE SCHOOL HOLIDAYS — sourced from south-ayrshire.gov.uk
+const SCHOOL_HOLIDAYS = [
+  {start:'2024-10-11',end:'2024-10-18',label:'October Holiday'},
+  {start:'2024-12-23',end:'2025-01-03',label:'Christmas & New Year'},
+  {start:'2025-02-10',end:'2025-02-11',label:'Winter Holiday'},
+  {start:'2025-04-07',end:'2025-04-21',label:'Easter Holiday'},
+  {start:'2025-05-05',end:'2025-05-05',label:'May Day'},
+  {start:'2025-05-26',end:'2025-05-27',label:'May Weekend'},
+  {start:'2025-06-28',end:'2025-08-19',label:'Summer Holiday'},
+  {start:'2025-09-19',end:'2025-09-22',label:'September Weekend'},
+  {start:'2025-10-13',end:'2025-10-17',label:'October Holiday'},
+  {start:'2025-10-20',end:'2025-10-20',label:'In-Service Day'},
+  {start:'2025-12-22',end:'2026-01-02',label:'Christmas & New Year'},
+  {start:'2026-02-06',end:'2026-02-09',label:'Winter Holiday'},
+  {start:'2026-02-10',end:'2026-02-10',label:'In-Service Day'},
+  {start:'2026-04-03',end:'2026-04-17',label:'Easter Holiday'},
+  {start:'2026-05-04',end:'2026-05-04',label:'May Day'},
+  {start:'2026-05-07',end:'2026-05-07',label:'In-Service Day'},
+  {start:'2026-05-25',end:'2026-05-25',label:'In-Service Day'},
+  {start:'2026-07-01',end:'2026-08-17',label:'Summer Holiday'},
+];
+
+let currentYear, currentMonth, childcareEvents=[], workEvents=[];
+
+function dateStr(d){return d.toISOString().split('T')[0]}
+function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r}
+function isHoliday(ds){for(const h of SCHOOL_HOLIDAYS){if(ds>=h.start&&ds<=h.end)return h.label}return null}
+
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800)}
+
+// ── GOOGLE SHEETS ──
+async function loadFromSheets(){
+  if(!SHEETS_CSV_URL){loadLocal();return}
+  try{
+    const r=await fetch(SHEETS_CSV_URL+'&t='+Date.now());
+    const t=await r.text();
+    childcareEvents=t.trim().split('\n').slice(1).map(row=>{
+      const c=row.split(',').map(x=>x.replace(/^"|"$/g,'').trim());
+      return{id:c[0],date:c[1],title:c[2],who:c[3],time:c[4],notes:c[5]};
+    }).filter(e=>e.date&&e.title);
+    setSheetsStatus(true);render();
+  }catch(e){loadLocal();setSheetsStatus(false)}
+}
+async function saveToSheets(evt){
+  if(!SHEETS_POST_URL){saveLocal();showToast('Saved locally');return}
+  try{
+    await fetch(SHEETS_POST_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'add',event:evt})});
+    showToast('Saved ✓');setTimeout(loadFromSheets,1200);
+  }catch(e){saveLocal();showToast('Saved locally (Sheets unreachable)')}
+}
+async function deleteFromSheets(id){
+  if(!SHEETS_POST_URL){childcareEvents=childcareEvents.filter(e=>e.id!==id);saveLocal();render();return}
+  try{
+    await fetch(SHEETS_POST_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'delete',id})});
+    showToast('Deleted');setTimeout(loadFromSheets,1200);
+  }catch(e){childcareEvents=childcareEvents.filter(e=>e.id!==id);saveLocal();render()}
+}
+function setSheetsStatus(ok){
+  document.getElementById('sheetsDot').className='sync-dot'+(ok?'':' amber');
+  document.getElementById('sheetsLabel').textContent=ok?'Sheets: live':'Sheets: offline';
+}
+
+// ── LOCAL FALLBACK ──
+const SEED=[
+  {id:'s1',date:dateStr(new Date()),title:'Example: Nursery drop-off',who:'partner',time:'08:30',notes:''},
+  {id:'s2',date:dateStr(addDays(new Date(),3)),title:'Example: Grandparents visiting',who:'grandparent',time:'14:00',notes:'Staying for dinner'},
+];
+function loadLocal(){try{const s=localStorage.getItem('fce');childcareEvents=s?JSON.parse(s):[...SEED];if(!s)saveLocal()}catch(e){childcareEvents=[...SEED]}render()}
+function saveLocal(){try{localStorage.setItem('fce',JSON.stringify(childcareEvents))}catch(e){}}
+
+// ── OUTLOOK iCAL ──
+function parseICS(text){
+  const evts=[],lines=text.replace(/\r\n /g,'').replace(/\r\n/g,'\n').split('\n');let c=null;
+  for(const l of lines){
+    if(l.startsWith('BEGIN:VEVENT')){c={}}
+    else if(l.startsWith('END:VEVENT')&&c){if(c.date&&c.title)evts.push(c);c=null}
+    else if(c){
+      if(l.startsWith('SUMMARY:'))c.title=l.slice(8).trim();
+      else if(l.startsWith('DTSTART')){const v=l.split(':').slice(1).join(':').trim();c.date=v.slice(0,4)+'-'+v.slice(4,6)+'-'+v.slice(6,8);if(v.length>8)c.time=v.slice(9,11)+':'+v.slice(11,13)}
+    }
+  }
+  return evts;
+}
+async function fetchOutlook(){
+  if(!OUTLOOK_ICAL_URL)return;
+  try{
+    const r=await fetch('https://corsproxy.io/?'+encodeURIComponent(OUTLOOK_ICAL_URL));
+    if(!r.ok)throw new Error();
+    workEvents=parseICS(await r.text());
+    document.getElementById('outlookDot').className='sync-dot';
+    document.getElementById('outlookLabel').textContent='Outlook: live';
+    render();
+  }catch(e){document.getElementById('outlookLabel').textContent='Outlook: error'}
+}
+
+// ── RENDER ──
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+function render(){
+  const grid=document.getElementById('calGrid');
+  document.getElementById('monthLabel').textContent=MONTHS[currentMonth]+' '+currentYear;
+  grid.innerHTML='';
+  const first=new Date(currentYear,currentMonth,1),off=(first.getDay()+6)%7;
+  const dim=new Date(currentYear,currentMonth+1,0).getDate(),dip=new Date(currentYear,currentMonth,0).getDate();
+  const today=dateStr(new Date()),total=Math.ceil((off+dim)/7)*7;
+  for(let i=0;i<total;i++){
+    let day,mo,yr,other=false;
+    if(i<off){day=dip-off+i+1;mo=currentMonth-1;yr=currentYear;other=true}
+    else if(i>=off+dim){day=i-off-dim+1;mo=currentMonth+1;yr=currentYear;other=true}
+    else{day=i-off+1;mo=currentMonth;yr=currentYear}
+    const d=new Date(yr,mo,day),ds=dateStr(d),hl=isHoliday(ds),isT=ds===today;
+    const cell=document.createElement('div');
+    cell.className='cell'+(other?' other-month':'')+(isT?' today':'')+(hl&&!other?' school-hol':'');
+    if(hl&&!other){const b=document.createElement('div');b.className='school-banner';cell.appendChild(b)}
+    const num=document.createElement('div');num.className='day-num';num.textContent=day;cell.appendChild(num);
+    if(!other){
+      const wk=workEvents.filter(e=>e.date===ds),ch=childcareEvents.filter(e=>e.date===ds);
+      const all=[...(hl?[{title:hl,type:'school'}]:[]),...wk.map(e=>({...e,type:'work'})),...ch.map(e=>({...e,type:e.who}))];
+      const wrap=document.createElement('div');wrap.className='events';
+      all.slice(0,3).forEach(ev=>{const t=document.createElement('div');t.className='event '+ev.type;t.textContent=(ev.time?ev.time+' ':'')+ev.title;t.title=ev.title;wrap.appendChild(t)});
+      if(all.length>3){const m=document.createElement('div');m.className='more-label';m.textContent=`+${all.length-3} more`;wrap.appendChild(m)}
+      cell.appendChild(wrap);
+      cell.addEventListener('click',()=>openDay(ds,d));
+    }
+    grid.appendChild(cell);
+  }
+}
+
+// ── DAY MODAL ──
+const COL={work:{bar:'var(--work)',bg:'var(--work-bg)'},michael:{bar:'var(--michael)',bg:'var(--michael-bg)'},partner:{bar:'var(--partner)',bg:'var(--partner-bg)'},grandparent:{bar:'var(--gp)',bg:'var(--gp-bg)'},school:{bar:'var(--school)',bg:'var(--school-bg)'}};
+function openDay(ds,d){
+  const list=document.getElementById('dayEventsList');
+  document.getElementById('dayModalTitle').textContent=d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+  list.innerHTML='';
+  const hl=isHoliday(ds);
+  const all=[...(hl?[{title:hl,type:'school',time:'All day'}]:[]),...workEvents.filter(e=>e.date===ds).map(e=>({...e,type:'work'})),...childcareEvents.filter(e=>e.date===ds).map(e=>({...e,type:e.who}))];
+  if(!all.length){list.innerHTML='<div class="no-events">No events — tap "Add to this day" below.</div>'}
+  else all.forEach(ev=>{
+    const c=COL[ev.type]||COL.michael,item=document.createElement('div');
+    item.className='day-event-item';item.style.background=c.bg;
+    item.innerHTML=`<div class="evt-bar" style="background:${c.bar}"></div><div class="evt-body"><div class="evt-title">${ev.title}</div><div class="evt-meta">${ev.time||''}${ev.notes?' · '+ev.notes:''}</div></div>${ev.id?`<button class="evt-delete" data-id="${ev.id}">✕</button>`:''}`;
+    list.appendChild(item);
+  });
+  list.querySelectorAll('.evt-delete').forEach(b=>b.addEventListener('click',()=>{closeModal('dayOverlay');deleteFromSheets(b.dataset.id)}));
+  document.getElementById('dayAddBtn').onclick=()=>{closeModal('dayOverlay');openAdd(ds)};
+  document.getElementById('dayOverlay').classList.add('open');
+}
+
+function openAdd(pre){if(pre)document.getElementById('evtDate').value=pre;document.getElementById('addOverlay').classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+
+document.getElementById('addBtn').addEventListener('click',()=>openAdd(''));
+['addClose','addCancelBtn'].forEach(id=>document.getElementById(id).addEventListener('click',()=>closeModal('addOverlay')));
+['dayClose','dayCancelBtn'].forEach(id=>document.getElementById(id).addEventListener('click',()=>closeModal('dayOverlay')));
+['addOverlay','dayOverlay'].forEach(id=>document.getElementById(id).addEventListener('click',function(e){if(e.target===this)closeModal(id)}));
+
+document.getElementById('saveEvtBtn').addEventListener('click',async()=>{
+  const title=document.getElementById('evtTitle').value.trim(),date=document.getElementById('evtDate').value;
+  if(!title||!date){showToast('Please add a title and date');return}
+  const evt={id:'e'+Date.now(),title,date,time:document.getElementById('evtTime').value,who:document.getElementById('evtWho').value,notes:document.getElementById('evtNotes').value.trim()};
+  childcareEvents.push(evt);
+  ['evtTitle','evtDate','evtTime','evtNotes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('evtWho').value='michael';
+  closeModal('addOverlay');render();
+  await saveToSheets(evt);
+});
+
+document.getElementById('prevBtn').addEventListener('click',()=>{currentMonth--;if(currentMonth<0){currentMonth=11;currentYear--}render()});
+document.getElementById('nextBtn').addEventListener('click',()=>{currentMonth++;if(currentMonth>11){currentMonth=0;currentYear++}render()});
+document.getElementById('todayBtn').addEventListener('click',()=>{const n=new Date();currentYear=n.getFullYear();currentMonth=n.getMonth();render()});
+
+(function(){const n=new Date();currentYear=n.getFullYear();currentMonth=n.getMonth();
+  loadFromSheets();fetchOutlook();
+  setInterval(fetchOutlook,30*60*1000);
+  setInterval(loadFromSheets,5*60*1000);
+})();
+</script>
+</body>
+</html>
