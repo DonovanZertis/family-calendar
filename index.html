@@ -8,12 +8,34 @@
 <style>
 :root {
   --bg:#f5f2ed; --surface:#fff; --ink:#1c1a17; --ink-mid:#5a5650; --ink-light:#9a9590; --border:#e5e0d8;
-  --michael:#1d4e7a; --michael-bg:#e8f0f8; --partner:#7a3d6e; --partner-bg:#f5e8f2;
-  --gp:#2e6b4a; --gp-bg:#e4f2eb; --school:#c05a1a; --school-bg:#fdf0e6; --work:#1d3a5a; --work-bg:#e6ecf4;
+
+  /* Michael — Blue */
+  --michael:#1a5fa8; --michael-bg:#e3eef9; --michael-border:#90bde8;
+
+  /* Partner — Pink */
+  --partner:#c2185b; --partner-bg:#fce4ec; --partner-border:#f48fb1;
+
+  /* Grandparents — Yellow */
+  --gp:#c77c00; --gp-bg:#fff8e1; --gp-border:#ffd54f;
+
+  /* Kids — Green */
+  --kids:#2e7d32; --kids-bg:#e8f5e9; --kids-border:#81c784;
+
+  /* School holidays — Amber */
+  --school:#b45000; --school-bg:#fff3e0; --school-border:#ffb74d;
+
+  /* Work — Navy */
+  --work:#1a3a5c; --work-bg:#e8eef6; --work-border:#90a4c0;
+
+  /* Childcare Needed — Red */
+  --needed:#c62828; --needed-bg:#ffebee; --needed-border:#ef9a9a;
+
   --radius:10px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;font-size:14px}
+
+/* HEADER */
 .header{background:var(--ink);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
 .header h1{font-family:'Lora',serif;font-size:1.25rem;color:#fff;font-weight:600}
 .header p{font-size:.72rem;color:rgba(255,255,255,.4);margin-top:2px;font-weight:300}
@@ -22,9 +44,13 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);min-h
 .sync-dot{width:6px;height:6px;background:#4caf7d;border-radius:50%;animation:pulse 2.5s infinite}
 .sync-dot.amber{background:#f0a030}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.legend{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 24px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
-.legend-item{display:flex;align-items:center;gap:6px;font-size:.72rem;color:var(--ink-mid)}
-.pill{height:8px;width:20px;border-radius:4px}
+
+/* LEGEND */
+.legend{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 24px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:.7rem;color:var(--ink-mid);font-weight:500}
+.pill{height:10px;width:10px;border-radius:50%;flex-shrink:0}
+
+/* CONTROLS */
 .controls{padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .month-nav{display:flex;align-items:center;gap:10px}
 .nav-btn{background:var(--surface);border:1px solid var(--border);border-radius:8px;width:34px;height:34px;cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:all .15s;color:var(--ink)}
@@ -32,102 +58,131 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);min-h
 .month-label{font-family:'Lora',serif;font-size:1.1rem;font-weight:600;min-width:165px;text-align:center}
 .today-btn{background:transparent;border:1px solid var(--border);border-radius:7px;padding:6px 13px;font-family:'Outfit',sans-serif;font-size:.75rem;cursor:pointer;color:var(--ink-mid);transition:all .15s}
 .today-btn:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap}
 .add-btn{background:var(--ink);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-family:'Outfit',sans-serif;font-size:.8rem;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;transition:opacity .15s}
 .add-btn:hover{opacity:.82}
+.need-btn{background:var(--needed);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-family:'Outfit',sans-serif;font-size:.8rem;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;transition:opacity .15s}
+.need-btn:hover{opacity:.82}
+
+/* GRID */
 .calendar-wrap{padding:0 24px 32px}
 .day-headers{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px}
 .day-header{text-align:center;font-size:.68rem;font-weight:600;color:var(--ink-light);padding:5px 0;text-transform:uppercase;letter-spacing:.08em}
 .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.cell{background:var(--surface);border-radius:var(--radius);min-height:95px;padding:7px;border:1.5px solid var(--border);cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .1s;position:relative;overflow:hidden}
-.cell:hover{border-color:#999;box-shadow:0 3px 14px rgba(0,0,0,.09);transform:translateY(-1px)}
-.cell.other-month{background:#faf9f6;opacity:.45;pointer-events:none}
+.cell{background:var(--surface);border-radius:var(--radius);min-height:100px;padding:7px;border:1.5px solid var(--border);cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .1s;position:relative;overflow:hidden}
+.cell:hover{border-color:#aaa;box-shadow:0 3px 14px rgba(0,0,0,.09);transform:translateY(-1px)}
+.cell.other-month{background:#faf9f6;opacity:.4;pointer-events:none}
 .cell.today{border-color:var(--michael);border-width:2px}
-.cell.school-hol{background:linear-gradient(160deg,#fffaf5 0%,#fff4eb 100%)}
-.school-banner{position:absolute;top:0;left:0;right:0;height:3px;background:var(--school);opacity:.7}
-.day-num{font-size:.78rem;font-weight:500;color:var(--ink-light);line-height:1;margin-bottom:5px}
-.cell.today .day-num{background:var(--michael);color:#fff;width:21px;height:21px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:600}
+.cell.school-hol{background:linear-gradient(160deg,#fffdf8 0%,#fff8ed 100%)}
+.cell.needs-care{border-color:var(--needed-border);border-width:2px}
+
+/* Top banners */
+.top-banner{position:absolute;top:0;left:0;right:0;height:3.5px}
+
+/* Day number */
+.day-num{font-size:.78rem;font-weight:500;color:var(--ink-light);line-height:1;margin-bottom:6px;margin-top:4px}
+.cell.today .day-num{background:var(--michael);color:#fff;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:700;margin-top:2px}
+
+/* NEEDED badge */
+.need-badge{display:inline-block;background:var(--needed);color:#fff;font-size:.52rem;font-weight:700;padding:1px 5px;border-radius:8px;margin-bottom:3px;letter-spacing:.04em}
+
+/* Events */
 .events{display:flex;flex-direction:column;gap:2px}
-.event{border-radius:4px;padding:2px 6px;font-size:.65rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.5;cursor:pointer}
-.event.michael{background:var(--michael-bg);color:var(--michael)}
-.event.partner{background:var(--partner-bg);color:var(--partner)}
-.event.grandparent{background:var(--gp-bg);color:var(--gp)}
-.event.school{background:var(--school-bg);color:var(--school)}
-.event.work{background:var(--work-bg);color:var(--work);font-style:italic}
+.event{border-radius:5px;padding:2px 7px;font-size:.64rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.6;border-left:3px solid transparent}
+.event.michael   {background:var(--michael-bg);color:var(--michael);border-left-color:var(--michael)}
+.event.partner   {background:var(--partner-bg);color:var(--partner);border-left-color:var(--partner)}
+.event.grandparent{background:var(--gp-bg);color:var(--gp);border-left-color:var(--gp)}
+.event.kids      {background:var(--kids-bg);color:var(--kids);border-left-color:var(--kids)}
+.event.school    {background:var(--school-bg);color:var(--school);border-left-color:var(--school)}
+.event.work      {background:var(--work-bg);color:var(--work);border-left-color:var(--work);font-style:italic;font-weight:400}
+.event.needed    {background:var(--needed-bg);color:var(--needed);border-left-color:var(--needed);font-weight:700}
 .more-label{font-size:.6rem;color:var(--ink-light);padding:1px 4px}
-.overlay{position:fixed;inset:0;background:rgba(28,26,23,.55);backdrop-filter:blur(3px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
+
+/* MODALS */
+.overlay{position:fixed;inset:0;background:rgba(28,26,23,.6);backdrop-filter:blur(4px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
 .overlay.open{opacity:1;pointer-events:all}
-.modal{background:var(--surface);border-radius:16px;width:100%;max-width:430px;box-shadow:0 20px 60px rgba(0,0,0,.2);overflow:hidden;transform:translateY(16px);transition:transform .2s}
+.modal{background:var(--surface);border-radius:18px;width:100%;max-width:440px;box-shadow:0 24px 70px rgba(0,0,0,.22);overflow:hidden;transform:translateY(18px);transition:transform .22s}
 .overlay.open .modal{transform:translateY(0)}
-.modal-header{background:var(--ink);color:#fff;padding:18px 22px;display:flex;justify-content:space-between;align-items:center}
-.modal-header h2{font-family:'Lora',serif;font-size:1rem;font-weight:600}
-.close-btn{background:rgba(255,255,255,.12);border:none;color:#fff;width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center}
+.modal-header{padding:18px 22px;display:flex;justify-content:space-between;align-items:center}
+.modal-header h2{font-family:'Lora',serif;font-size:1rem;font-weight:600;color:#fff}
+.mh-dark{background:var(--ink)}
+.mh-red{background:var(--needed)}
+.mh-blue{background:var(--michael)}
+.close-btn{background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center}
 .modal-body{padding:22px;display:flex;flex-direction:column;gap:14px}
 .field{display:flex;flex-direction:column;gap:5px}
-.field label{font-size:.75rem;font-weight:600;color:var(--ink-mid);text-transform:uppercase;letter-spacing:.05em}
+.field label{font-size:.73rem;font-weight:600;color:var(--ink-mid);text-transform:uppercase;letter-spacing:.06em}
 .field input,.field select,.field textarea{font-family:'Outfit',sans-serif;font-size:.85rem;border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--ink);outline:none;transition:border-color .15s;background:#fff}
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--michael)}
-.field textarea{resize:vertical;min-height:60px}
+.field textarea{resize:vertical;min-height:58px}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.modal-footer{padding:14px 22px 20px;display:flex;gap:8px;justify-content:flex-end}
+.modal-footer{padding:12px 22px 20px;display:flex;gap:8px;justify-content:flex-end}
 .btn-cancel{background:transparent;border:1.5px solid var(--border);border-radius:8px;padding:9px 18px;font-family:'Outfit',sans-serif;font-size:.82rem;cursor:pointer;color:var(--ink-mid);transition:all .15s}
 .btn-cancel:hover{background:var(--bg)}
-.btn-save{background:var(--ink);color:#fff;border:none;border-radius:8px;padding:9px 22px;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:500;cursor:pointer;transition:opacity .15s}
-.btn-save:hover{opacity:.82}
-.day-events-list{display:flex;flex-direction:column;gap:8px;max-height:340px;overflow-y:auto}
-.day-event-item{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:8px}
-.evt-bar{width:4px;border-radius:2px;align-self:stretch;flex-shrink:0}
-.evt-body{flex:1}
-.evt-title{font-size:.85rem;font-weight:500}
+.btn-save{color:#fff;border:none;border-radius:8px;padding:9px 22px;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:opacity .15s}
+.btn-save:hover{opacity:.84}
+.btn-dark{background:var(--ink)}
+.btn-red{background:var(--needed)}
+
+/* WHO PICKER */
+.who-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.who-opt{border:2px solid var(--border);border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.8rem;font-weight:600;transition:all .15s;background:#fff}
+.who-opt.selected{color:#fff}
+.who-opt[data-who="michael"].selected{background:var(--michael);border-color:var(--michael)}
+.who-opt[data-who="partner"].selected{background:var(--partner);border-color:var(--partner)}
+.who-opt[data-who="grandparent"].selected{background:var(--gp);border-color:var(--gp);color:#5a3a00}
+.who-opt[data-who="kids"].selected{background:var(--kids);border-color:var(--kids)}
+
+/* DAY DETAIL */
+.day-events-list{display:flex;flex-direction:column;gap:8px;max-height:360px;overflow-y:auto}
+.day-event-item{display:flex;gap:10px;align-items:flex-start;padding:11px 13px;border-radius:10px}
+.evt-bar{width:4px;min-height:100%;border-radius:2px;flex-shrink:0;align-self:stretch}
+.evt-body{flex:1;min-width:0}
+.evt-title{font-size:.87rem;font-weight:600}
 .evt-meta{font-size:.72rem;color:var(--ink-light);margin-top:2px}
-.evt-delete{background:none;border:none;color:var(--ink-light);cursor:pointer;font-size:.85rem;padding:2px 4px;border-radius:4px;transition:color .1s,background .1s}
-.evt-delete:hover{color:#c0392b;background:#fdecea}
-.no-events{color:var(--ink-light);font-size:.82rem;text-align:center;padding:20px 0;font-style:italic}
-.setup-banner{margin:0 24px 16px;background:#fff8ec;border:1.5px solid #f0d080;border-radius:10px;padding:12px 16px;font-size:.78rem;color:#7a5a10;display:flex;gap:10px;align-items:flex-start;line-height:1.6}
-.setup-banner.hidden{display:none}
-.setup-banner strong{display:block;margin-bottom:2px;font-size:.8rem}
-.banner-close{margin-left:auto;background:none;border:none;cursor:pointer;color:#b08030;font-size:1rem;flex-shrink:0}
-code{background:rgba(0,0,0,.07);padding:1px 5px;border-radius:4px;font-size:.74rem;font-family:monospace}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--ink);color:#fff;padding:10px 20px;border-radius:8px;font-size:.82rem;z-index:200;transition:transform .25s;pointer-events:none;white-space:nowrap}
+.evt-delete{background:none;border:none;color:var(--ink-light);cursor:pointer;font-size:.9rem;padding:3px 5px;border-radius:5px;transition:color .1s,background .1s;flex-shrink:0}
+.evt-delete:hover{color:#c62828;background:#ffebee}
+.no-events{color:var(--ink-light);font-size:.82rem;text-align:center;padding:22px 0;font-style:italic}
+.hint-box{background:var(--needed-bg);border:1px solid var(--needed-border);border-radius:8px;padding:10px 13px;font-size:.76rem;color:var(--needed);line-height:1.5}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(70px);background:var(--ink);color:#fff;padding:10px 22px;border-radius:9px;font-size:.82rem;z-index:200;transition:transform .25s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.2)}
 .toast.show{transform:translateX(-50%) translateY(0)}
-@media(max-width:600px){
+
+@media(max-width:640px){
   .header,.controls,.calendar-wrap,.legend{padding-left:12px;padding-right:12px}
-  .cell{min-height:70px;padding:5px}
-  .event{font-size:.58rem;padding:1px 4px}
+  .cell{min-height:72px;padding:5px}
+  .event{font-size:.58rem;padding:1px 5px}
+  .who-grid{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <div class="header">
   <div>
     <h1>Family Calendar</h1>
-    <p>Michael · Partner · Grandparents &nbsp;·&nbsp; South Ayrshire Schools</p>
+    <p>Michael · Partner · Grandparents · Kids &nbsp;·&nbsp; South Ayrshire Schools</p>
   </div>
   <div class="sync-row">
-    <div class="sync-chip"><span class="sync-dot amber" id="outlookDot"></span><span id="outlookLabel">Outlook: not set up</span></div>
-    <div class="sync-chip"><span class="sync-dot amber" id="sheetsDot"></span><span id="sheetsLabel">Sheets: not set up</span></div>
+    <div class="sync-chip"><span class="sync-dot amber" id="outlookDot"></span><span id="outlookLabel">Outlook: connecting…</span></div>
+    <div class="sync-chip"><span class="sync-dot amber" id="sheetsDot"></span><span id="sheetsLabel">Sheets: connecting…</span></div>
   </div>
 </div>
 
+<!-- LEGEND -->
 <div class="legend">
-  <div class="legend-item"><span class="pill" style="background:var(--work-bg);border:1.5px solid var(--work)"></span>Michael's Work</div>
-  <div class="legend-item"><span class="pill" style="background:var(--michael-bg);border:1.5px solid var(--michael)"></span>Michael</div>
-  <div class="legend-item"><span class="pill" style="background:var(--partner-bg);border:1.5px solid var(--partner)"></span>Partner</div>
-  <div class="legend-item"><span class="pill" style="background:var(--gp-bg);border:1.5px solid var(--gp)"></span>Grandparents</div>
-  <div class="legend-item"><span class="pill" style="background:var(--school-bg);border:1.5px solid var(--school)"></span>School Holiday</div>
+  <div class="legend-item"><span class="pill" style="background:var(--michael)"></span>Michael</div>
+  <div class="legend-item"><span class="pill" style="background:var(--partner)"></span>Partner</div>
+  <div class="legend-item"><span class="pill" style="background:var(--gp)"></span>Grandparents</div>
+  <div class="legend-item"><span class="pill" style="background:var(--kids)"></span>Kids</div>
+  <div class="legend-item"><span class="pill" style="background:var(--work)"></span>Michael's Work</div>
+  <div class="legend-item"><span class="pill" style="background:var(--school)"></span>School Holiday</div>
+  <div class="legend-item"><span class="pill" style="background:var(--needed)"></span>Childcare Needed</div>
 </div>
 
-<div class="setup-banner" id="setupBanner">
-  <span>⚙️</span>
-  <div>
-    <strong>Two quick setup steps needed</strong>
-    1. Paste your Outlook iCal URL into <code>OUTLOOK_ICAL_URL</code> in the script.<br>
-    2. Create the Google Sheet, paste its CSV URL into <code>SHEETS_CSV_URL</code> and your Apps Script URL into <code>SHEETS_POST_URL</code>.<br>
-    Full step-by-step instructions are in the README.
-  </div>
-  <button class="banner-close" onclick="document.getElementById('setupBanner').classList.add('hidden')">✕</button>
-</div>
-
+<!-- CONTROLS -->
 <div class="controls">
   <div class="month-nav">
     <button class="nav-btn" id="prevBtn">&#8592;</button>
@@ -135,9 +190,13 @@ code{background:rgba(0,0,0,.07);padding:1px 5px;border-radius:4px;font-size:.74r
     <button class="nav-btn" id="nextBtn">&#8594;</button>
     <button class="today-btn" id="todayBtn">Today</button>
   </div>
-  <button class="add-btn" id="addBtn">＋ Add Event</button>
+  <div class="btn-row">
+    <button class="need-btn" id="needBtn">🔴 Childcare Needed</button>
+    <button class="add-btn" id="addBtn">＋ Add Event</button>
+  </div>
 </div>
 
+<!-- CALENDAR -->
 <div class="calendar-wrap">
   <div class="day-headers">
     <div class="day-header">Mon</div><div class="day-header">Tue</div><div class="day-header">Wed</div>
@@ -146,24 +205,51 @@ code{background:rgba(0,0,0,.07);padding:1px 5px;border-radius:4px;font-size:.74r
   <div class="grid" id="calGrid"></div>
 </div>
 
+<!-- CHILDCARE NEEDED MODAL -->
+<div class="overlay" id="needOverlay">
+  <div class="modal">
+    <div class="modal-header mh-red"><h2>🔴 Childcare Needed</h2><button class="close-btn" id="needClose">✕</button></div>
+    <div class="modal-body">
+      <div class="hint-box">Mark a day where you need childcare cover. Everyone will see a red alert on that day.</div>
+      <div class="field"><label>Date</label><input type="date" id="needDate"></div>
+      <div class="field-row">
+        <div class="field"><label>From</label><input type="time" id="needFrom" value="08:00"></div>
+        <div class="field"><label>Until</label><input type="time" id="needUntil" value="18:00"></div>
+      </div>
+      <div class="field"><label>Notes (optional)</label><textarea id="needNotes" placeholder="e.g. School pickup 3pm, dinner provided…"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" id="needCancelBtn">Cancel</button>
+      <button class="btn-save btn-red" id="saveNeedBtn">Mark as Needed</button>
+    </div>
+  </div>
+</div>
+
 <!-- ADD EVENT MODAL -->
 <div class="overlay" id="addOverlay">
   <div class="modal">
-    <div class="modal-header"><h2>Add Childcare Event</h2><button class="close-btn" id="addClose">✕</button></div>
+    <div class="modal-header mh-dark"><h2>Add Event</h2><button class="close-btn" id="addClose">✕</button></div>
     <div class="modal-body">
-      <div class="field"><label>Title</label><input type="text" id="evtTitle" placeholder="e.g. Nursery pickup, Grandparents visiting…"></div>
+      <div class="field"><label>Title</label><input type="text" id="evtTitle" placeholder="e.g. Nursery pickup, Park visit…"></div>
+      <div class="field"><label>Date</label><input type="date" id="evtDate"></div>
       <div class="field-row">
-        <div class="field"><label>Date</label><input type="date" id="evtDate"></div>
-        <div class="field"><label>Time (optional)</label><input type="time" id="evtTime"></div>
+        <div class="field"><label>From</label><input type="time" id="evtFrom"></div>
+        <div class="field"><label>Until</label><input type="time" id="evtUntil"></div>
       </div>
-      <div class="field"><label>Who's responsible</label>
-        <select id="evtWho"><option value="michael">Michael</option><option value="partner">Partner</option><option value="grandparent">Grandparents</option></select>
+      <div class="field">
+        <label>Who</label>
+        <div class="who-grid">
+          <div class="who-opt selected" data-who="michael">🔵 Michael</div>
+          <div class="who-opt" data-who="partner">🩷 Partner</div>
+          <div class="who-opt" data-who="grandparent">🟡 Grandparents</div>
+          <div class="who-opt" data-who="kids">🟢 Kids</div>
+        </div>
       </div>
       <div class="field"><label>Notes (optional)</label><textarea id="evtNotes" placeholder="Any extra details…"></textarea></div>
     </div>
     <div class="modal-footer">
       <button class="btn-cancel" id="addCancelBtn">Cancel</button>
-      <button class="btn-save" id="saveEvtBtn">Save Event</button>
+      <button class="btn-save btn-dark" id="saveEvtBtn">Save Event</button>
     </div>
   </div>
 </div>
@@ -171,11 +257,11 @@ code{background:rgba(0,0,0,.07);padding:1px 5px;border-radius:4px;font-size:.74r
 <!-- DAY DETAIL MODAL -->
 <div class="overlay" id="dayOverlay">
   <div class="modal">
-    <div class="modal-header"><h2 id="dayModalTitle">Events</h2><button class="close-btn" id="dayClose">✕</button></div>
+    <div class="modal-header mh-blue"><h2 id="dayModalTitle">Events</h2><button class="close-btn" id="dayClose">✕</button></div>
     <div class="modal-body"><div class="day-events-list" id="dayEventsList"></div></div>
     <div class="modal-footer">
       <button class="btn-cancel" id="dayCancelBtn">Close</button>
-      <button class="btn-save" id="dayAddBtn">＋ Add to this day</button>
+      <button class="btn-save btn-dark" id="dayAddBtn">＋ Add to this day</button>
     </div>
   </div>
 </div>
@@ -183,16 +269,13 @@ code{background:rgba(0,0,0,.07);padding:1px 5px;border-radius:4px;font-size:.74r
 <div class="toast" id="toast"></div>
 
 <script>
-// ════════════════════════════════════════════════════
-//  CONFIGURATION — fill in these three values to go live
-// ════════════════════════════════════════════════════
-const OUTLOOK_ICAL_URL = 'https://outlook.office365.com/owa/calendar/312bb03e527e48a9a3fdcfed82046653@pristinecondition.com/a3808f16ca9449bd8639142c640a28c812203616382696668906/calendar.ics';   // Outlook ICS private link
-const SHEETS_CSV_URL   = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS0NTOdjxM36EJW9y3wqX4nOpgW-iQopzUyQ2-z5BoAtXX2go6dBC-XHsvNxFp2QW3BD_vVbuUWJ8Me/pub?gid=0&single=true&output=csv';   // Google Sheet → File → Share → Publish as CSV
-const SHEETS_POST_URL  = 'https://script.google.com/macros/s/AKfycbwUBQZ2GXFJQ4H9i_NsNHjnYCacPl5-hLPWJ5hO3bQtFTtqN6GCE2iGL6cXw9a1hA8o/exec';   // Google Apps Script Web App URL
-// ════════════════════════════════════════════════════
+// ── CONFIG (URLs already set) ──
+const OUTLOOK_ICAL_URL = '';
+const SHEETS_CSV_URL   = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS0NTOdjxM36EJW9y3wqX4nOpgW-iQopzUyQ2-z5BoAtXX2go6dBC-XHsvNxFp2QW3BD_vVbuUWJ8Me/pub?gid=0&single=true&output=csv';
+const SHEETS_POST_URL  = 'https://script.google.com/macros/s/AKfycbwUBQZ2GXFJQ4H9i_NsNHjnYCacPl5-hLPWJ5hO3bQtFTtqN6GCE2iGL6cXw9a1hA8o/exec';
 
-// SOUTH AYRSHIRE SCHOOL HOLIDAYS — sourced from south-ayrshire.gov.uk
-const SCHOOL_HOLIDAYS = [
+// ── SOUTH AYRSHIRE SCHOOL HOLIDAYS ──
+const SCHOOL_HOLIDAYS=[
   {start:'2024-10-11',end:'2024-10-18',label:'October Holiday'},
   {start:'2024-12-23',end:'2025-01-03',label:'Christmas & New Year'},
   {start:'2025-02-10',end:'2025-02-11',label:'Winter Holiday'},
@@ -213,23 +296,44 @@ const SCHOOL_HOLIDAYS = [
   {start:'2026-07-01',end:'2026-08-17',label:'Summer Holiday'},
 ];
 
-let currentYear, currentMonth, childcareEvents=[], workEvents=[];
+// ── COLOUR MAP ──
+const COL={
+  michael:    {bar:'var(--michael)',    bg:'var(--michael-bg)'},
+  partner:    {bar:'var(--partner)',    bg:'var(--partner-bg)'},
+  grandparent:{bar:'var(--gp)',         bg:'var(--gp-bg)'},
+  kids:       {bar:'var(--kids)',       bg:'var(--kids-bg)'},
+  school:     {bar:'var(--school)',     bg:'var(--school-bg)'},
+  work:       {bar:'var(--work)',       bg:'var(--work-bg)'},
+  needed:     {bar:'var(--needed)',     bg:'var(--needed-bg)'},
+};
+
+let currentYear,currentMonth,childcareEvents=[],workEvents=[],selectedWho='michael';
 
 function dateStr(d){return d.toISOString().split('T')[0]}
 function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r}
 function isHoliday(ds){for(const h of SCHOOL_HOLIDAYS){if(ds>=h.start&&ds<=h.end)return h.label}return null}
-
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800)}
+function fmt(t){if(!t)return'';const[h,m]=t.split(':');const hr=+h;return`${hr%12||12}:${m}${hr>=12?'pm':'am'}`}
+function timeRange(from,until){if(!from)return'';return until?`${fmt(from)} – ${fmt(until)}`:fmt(from)}
+
+// ── WHO PICKER ──
+document.querySelectorAll('.who-opt').forEach(opt=>{
+  opt.addEventListener('click',()=>{
+    document.querySelectorAll('.who-opt').forEach(o=>o.classList.remove('selected'));
+    opt.classList.add('selected');
+    selectedWho=opt.dataset.who;
+  });
+});
 
 // ── GOOGLE SHEETS ──
 async function loadFromSheets(){
   if(!SHEETS_CSV_URL){loadLocal();return}
   try{
     const r=await fetch(SHEETS_CSV_URL+'&t='+Date.now());
-    const t=await r.text();
-    childcareEvents=t.trim().split('\n').slice(1).map(row=>{
+    const txt=await r.text();
+    childcareEvents=txt.trim().split('\n').slice(1).map(row=>{
       const c=row.split(',').map(x=>x.replace(/^"|"$/g,'').trim());
-      return{id:c[0],date:c[1],title:c[2],who:c[3],time:c[4],notes:c[5]};
+      return{id:c[0],date:c[1],title:c[2],who:c[3],timeFrom:c[4],timeUntil:c[5],notes:c[6]};
     }).filter(e=>e.date&&e.title);
     setSheetsStatus(true);render();
   }catch(e){loadLocal();setSheetsStatus(false)}
@@ -238,14 +342,14 @@ async function saveToSheets(evt){
   if(!SHEETS_POST_URL){saveLocal();showToast('Saved locally');return}
   try{
     await fetch(SHEETS_POST_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'add',event:evt})});
-    showToast('Saved ✓');setTimeout(loadFromSheets,1200);
-  }catch(e){saveLocal();showToast('Saved locally (Sheets unreachable)')}
+    showToast('Saved ✓');setTimeout(loadFromSheets,1500);
+  }catch(e){saveLocal();showToast('Saved locally')}
 }
 async function deleteFromSheets(id){
   if(!SHEETS_POST_URL){childcareEvents=childcareEvents.filter(e=>e.id!==id);saveLocal();render();return}
   try{
     await fetch(SHEETS_POST_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'delete',id})});
-    showToast('Deleted');setTimeout(loadFromSheets,1200);
+    showToast('Deleted');setTimeout(loadFromSheets,1500);
   }catch(e){childcareEvents=childcareEvents.filter(e=>e.id!==id);saveLocal();render()}
 }
 function setSheetsStatus(ok){
@@ -254,12 +358,8 @@ function setSheetsStatus(ok){
 }
 
 // ── LOCAL FALLBACK ──
-const SEED=[
-  {id:'s1',date:dateStr(new Date()),title:'Example: Nursery drop-off',who:'partner',time:'08:30',notes:''},
-  {id:'s2',date:dateStr(addDays(new Date(),3)),title:'Example: Grandparents visiting',who:'grandparent',time:'14:00',notes:'Staying for dinner'},
-];
-function loadLocal(){try{const s=localStorage.getItem('fce');childcareEvents=s?JSON.parse(s):[...SEED];if(!s)saveLocal()}catch(e){childcareEvents=[...SEED]}render()}
-function saveLocal(){try{localStorage.setItem('fce',JSON.stringify(childcareEvents))}catch(e){}}
+function loadLocal(){try{const s=localStorage.getItem('fce2');childcareEvents=s?JSON.parse(s):[]}catch(e){childcareEvents=[]}render()}
+function saveLocal(){try{localStorage.setItem('fce2',JSON.stringify(childcareEvents))}catch(e){}}
 
 // ── OUTLOOK iCAL ──
 function parseICS(text){
@@ -269,7 +369,7 @@ function parseICS(text){
     else if(l.startsWith('END:VEVENT')&&c){if(c.date&&c.title)evts.push(c);c=null}
     else if(c){
       if(l.startsWith('SUMMARY:'))c.title=l.slice(8).trim();
-      else if(l.startsWith('DTSTART')){const v=l.split(':').slice(1).join(':').trim();c.date=v.slice(0,4)+'-'+v.slice(4,6)+'-'+v.slice(6,8);if(v.length>8)c.time=v.slice(9,11)+':'+v.slice(11,13)}
+      else if(l.startsWith('DTSTART')){const v=l.split(':').slice(1).join(':').trim();c.date=v.slice(0,4)+'-'+v.slice(4,6)+'-'+v.slice(6,8);if(v.length>8)c.timeFrom=v.slice(9,11)+':'+v.slice(11,13)}
     }
   }
   return evts;
@@ -283,7 +383,7 @@ async function fetchOutlook(){
     document.getElementById('outlookDot').className='sync-dot';
     document.getElementById('outlookLabel').textContent='Outlook: live';
     render();
-  }catch(e){document.getElementById('outlookLabel').textContent='Outlook: error'}
+  }catch(e){document.getElementById('outlookLabel').textContent='Outlook: not connected'}
 }
 
 // ── RENDER ──
@@ -295,22 +395,47 @@ function render(){
   const first=new Date(currentYear,currentMonth,1),off=(first.getDay()+6)%7;
   const dim=new Date(currentYear,currentMonth+1,0).getDate(),dip=new Date(currentYear,currentMonth,0).getDate();
   const today=dateStr(new Date()),total=Math.ceil((off+dim)/7)*7;
+
   for(let i=0;i<total;i++){
     let day,mo,yr,other=false;
     if(i<off){day=dip-off+i+1;mo=currentMonth-1;yr=currentYear;other=true}
     else if(i>=off+dim){day=i-off-dim+1;mo=currentMonth+1;yr=currentYear;other=true}
     else{day=i-off+1;mo=currentMonth;yr=currentYear}
+
     const d=new Date(yr,mo,day),ds=dateStr(d),hl=isHoliday(ds),isT=ds===today;
+    const needEvt=!other&&childcareEvents.find(e=>e.date===ds&&e.who==='needed');
+
     const cell=document.createElement('div');
-    cell.className='cell'+(other?' other-month':'')+(isT?' today':'')+(hl&&!other?' school-hol':'');
-    if(hl&&!other){const b=document.createElement('div');b.className='school-banner';cell.appendChild(b)}
-    const num=document.createElement('div');num.className='day-num';num.textContent=day;cell.appendChild(num);
+    cell.className='cell'+(other?' other-month':'')+(isT?' today':'')+(hl&&!other?' school-hol':'')+(needEvt?' needs-care':'');
+
+    // Top colour banner
     if(!other){
-      const wk=workEvents.filter(e=>e.date===ds),ch=childcareEvents.filter(e=>e.date===ds);
-      const all=[...(hl?[{title:hl,type:'school'}]:[]),...wk.map(e=>({...e,type:'work'})),...ch.map(e=>({...e,type:e.who}))];
+      const banner=document.createElement('div');
+      banner.className='top-banner';
+      banner.style.background=needEvt?'var(--needed)':hl?'var(--school)':'transparent';
+      cell.appendChild(banner);
+    }
+
+    const num=document.createElement('div');num.className='day-num';num.textContent=day;cell.appendChild(num);
+
+    if(!other){
+      const wk=workEvents.filter(e=>e.date===ds);
+      const ch=childcareEvents.filter(e=>e.date===ds&&e.who!=='needed');
+      const allEvts=[
+        ...(needEvt?[{title:'🔴 '+(timeRange(needEvt.timeFrom,needEvt.timeUntil)||'Cover needed'),type:'needed'}]:[]),
+        ...(hl?[{title:hl,type:'school'}]:[]),
+        ...wk.map(e=>({...e,type:'work'})),
+        ...ch.map(e=>({...e,type:e.who})),
+      ];
       const wrap=document.createElement('div');wrap.className='events';
-      all.slice(0,3).forEach(ev=>{const t=document.createElement('div');t.className='event '+ev.type;t.textContent=(ev.time?ev.time+' ':'')+ev.title;t.title=ev.title;wrap.appendChild(t)});
-      if(all.length>3){const m=document.createElement('div');m.className='more-label';m.textContent=`+${all.length-3} more`;wrap.appendChild(m)}
+      allEvts.slice(0,3).forEach(ev=>{
+        const t=document.createElement('div');
+        t.className='event '+ev.type;
+        t.textContent=ev.title;
+        t.title=ev.title;
+        wrap.appendChild(t);
+      });
+      if(allEvts.length>3){const m=document.createElement('div');m.className='more-label';m.textContent=`+${allEvts.length-3} more`;wrap.appendChild(m)}
       cell.appendChild(wrap);
       cell.addEventListener('click',()=>openDay(ds,d));
     }
@@ -319,18 +444,26 @@ function render(){
 }
 
 // ── DAY MODAL ──
-const COL={work:{bar:'var(--work)',bg:'var(--work-bg)'},michael:{bar:'var(--michael)',bg:'var(--michael-bg)'},partner:{bar:'var(--partner)',bg:'var(--partner-bg)'},grandparent:{bar:'var(--gp)',bg:'var(--gp-bg)'},school:{bar:'var(--school)',bg:'var(--school-bg)'}};
 function openDay(ds,d){
   const list=document.getElementById('dayEventsList');
   document.getElementById('dayModalTitle').textContent=d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
   list.innerHTML='';
   const hl=isHoliday(ds);
-  const all=[...(hl?[{title:hl,type:'school',time:'All day'}]:[]),...workEvents.filter(e=>e.date===ds).map(e=>({...e,type:'work'})),...childcareEvents.filter(e=>e.date===ds).map(e=>({...e,type:e.who}))];
-  if(!all.length){list.innerHTML='<div class="no-events">No events — tap "Add to this day" below.</div>'}
+  const needEvt=childcareEvents.find(e=>e.date===ds&&e.who==='needed');
+  const all=[
+    ...(needEvt?[{...needEvt,title:'🔴 Childcare cover needed',type:'needed'}]:[]),
+    ...(hl?[{title:hl,type:'school',timeFrom:'All day'}]:[]),
+    ...workEvents.filter(e=>e.date===ds).map(e=>({...e,type:'work'})),
+    ...childcareEvents.filter(e=>e.date===ds&&e.who!=='needed').map(e=>({...e,type:e.who})),
+  ];
+  if(!all.length){list.innerHTML='<div class="no-events">Nothing yet — tap "Add to this day" below.</div>'}
   else all.forEach(ev=>{
-    const c=COL[ev.type]||COL.michael,item=document.createElement('div');
-    item.className='day-event-item';item.style.background=c.bg;
-    item.innerHTML=`<div class="evt-bar" style="background:${c.bar}"></div><div class="evt-body"><div class="evt-title">${ev.title}</div><div class="evt-meta">${ev.time||''}${ev.notes?' · '+ev.notes:''}</div></div>${ev.id?`<button class="evt-delete" data-id="${ev.id}">✕</button>`:''}`;
+    const c=COL[ev.type]||COL.michael;
+    const item=document.createElement('div');
+    item.className='day-event-item';
+    item.style.background=c.bg;
+    const tr=timeRange(ev.timeFrom,ev.timeUntil);
+    item.innerHTML=`<div class="evt-bar" style="background:${c.bar}"></div><div class="evt-body"><div class="evt-title">${ev.title}</div><div class="evt-meta">${tr}${ev.notes?' · '+ev.notes:''}</div></div>${ev.id?`<button class="evt-delete" data-id="${ev.id}" title="Delete">✕</button>`:''}`;
     list.appendChild(item);
   });
   list.querySelectorAll('.evt-delete').forEach(b=>b.addEventListener('click',()=>{closeModal('dayOverlay');deleteFromSheets(b.dataset.id)}));
@@ -338,21 +471,46 @@ function openDay(ds,d){
   document.getElementById('dayOverlay').classList.add('open');
 }
 
-function openAdd(pre){if(pre)document.getElementById('evtDate').value=pre;document.getElementById('addOverlay').classList.add('open')}
+// ── ADD EVENT ──
+function openAdd(pre){
+  if(pre)document.getElementById('evtDate').value=pre;
+  document.getElementById('addOverlay').classList.add('open');
+}
+function openNeed(pre){
+  if(pre)document.getElementById('needDate').value=pre;
+  document.getElementById('needOverlay').classList.add('open');
+}
 function closeModal(id){document.getElementById(id).classList.remove('open')}
 
 document.getElementById('addBtn').addEventListener('click',()=>openAdd(''));
+document.getElementById('needBtn').addEventListener('click',()=>openNeed(''));
 ['addClose','addCancelBtn'].forEach(id=>document.getElementById(id).addEventListener('click',()=>closeModal('addOverlay')));
 ['dayClose','dayCancelBtn'].forEach(id=>document.getElementById(id).addEventListener('click',()=>closeModal('dayOverlay')));
-['addOverlay','dayOverlay'].forEach(id=>document.getElementById(id).addEventListener('click',function(e){if(e.target===this)closeModal(id)}));
+['needClose','needCancelBtn'].forEach(id=>document.getElementById(id).addEventListener('click',()=>closeModal('needOverlay')));
+['addOverlay','dayOverlay','needOverlay'].forEach(id=>document.getElementById(id).addEventListener('click',function(e){if(e.target===this)closeModal(id)}));
+
+document.getElementById('saveNeedBtn').addEventListener('click',async()=>{
+  const date=document.getElementById('needDate').value;
+  if(!date){showToast('Please pick a date');return}
+  childcareEvents=childcareEvents.filter(e=>!(e.date===date&&e.who==='needed'));
+  const evt={id:'n'+Date.now(),title:'Childcare needed',date,who:'needed',timeFrom:document.getElementById('needFrom').value,timeUntil:document.getElementById('needUntil').value,notes:document.getElementById('needNotes').value.trim()};
+  childcareEvents.push(evt);
+  ['needDate','needNotes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('needFrom').value='08:00';
+  document.getElementById('needUntil').value='18:00';
+  closeModal('needOverlay');render();
+  await saveToSheets(evt);
+});
 
 document.getElementById('saveEvtBtn').addEventListener('click',async()=>{
   const title=document.getElementById('evtTitle').value.trim(),date=document.getElementById('evtDate').value;
   if(!title||!date){showToast('Please add a title and date');return}
-  const evt={id:'e'+Date.now(),title,date,time:document.getElementById('evtTime').value,who:document.getElementById('evtWho').value,notes:document.getElementById('evtNotes').value.trim()};
+  const evt={id:'e'+Date.now(),title,date,who:selectedWho,timeFrom:document.getElementById('evtFrom').value,timeUntil:document.getElementById('evtUntil').value,notes:document.getElementById('evtNotes').value.trim()};
   childcareEvents.push(evt);
-  ['evtTitle','evtDate','evtTime','evtNotes'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('evtWho').value='michael';
+  ['evtTitle','evtDate','evtFrom','evtUntil','evtNotes'].forEach(id=>document.getElementById(id).value='');
+  document.querySelectorAll('.who-opt').forEach(o=>o.classList.remove('selected'));
+  document.querySelector('[data-who="michael"]').classList.add('selected');
+  selectedWho='michael';
   closeModal('addOverlay');render();
   await saveToSheets(evt);
 });
@@ -361,8 +519,10 @@ document.getElementById('prevBtn').addEventListener('click',()=>{currentMonth--;
 document.getElementById('nextBtn').addEventListener('click',()=>{currentMonth++;if(currentMonth>11){currentMonth=0;currentYear++}render()});
 document.getElementById('todayBtn').addEventListener('click',()=>{const n=new Date();currentYear=n.getFullYear();currentMonth=n.getMonth();render()});
 
-(function(){const n=new Date();currentYear=n.getFullYear();currentMonth=n.getMonth();
-  loadFromSheets();fetchOutlook();
+(function(){
+  const n=new Date();currentYear=n.getFullYear();currentMonth=n.getMonth();
+  loadFromSheets();
+  fetchOutlook();
   setInterval(fetchOutlook,30*60*1000);
   setInterval(loadFromSheets,5*60*1000);
 })();
