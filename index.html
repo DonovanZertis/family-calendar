@@ -369,7 +369,7 @@ function parseICS(text){
     else if(l.startsWith('END:VEVENT')&&c){if(c.date&&c.title)evts.push(c);c=null}
     else if(c){
       if(l.startsWith('SUMMARY:'))c.title=l.slice(8).trim();
-      else if(l.startsWith('DTSTART')){const v=l.split(':').slice(1).join(':').trim();c.date=v.slice(0,4)+'-'+v.slice(4,6)+'-'+v.slice(6,8);if(v.length>8)c.timeFrom=v.slice(9,11)+':'+v.slice(11,13)}
+      const utcDate=new Date(v.slice(0,4)+'-'+v.slice(4,6)+'-'+v.slice(6,8)+'T'+(v.length>8?v.slice(9,11)+':'+v.slice(11,13):v.length>8?v.slice(9,11)+':'+v.slice(11,13):'00:00')+':00Z');const local=new Date(utcDate.getTime());c.date=local.toLocaleDateString('en-CA');if(v.length>8)c.timeFrom=local.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
     }
   }
   return evts;
